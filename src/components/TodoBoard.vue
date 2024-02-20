@@ -1,7 +1,9 @@
 <template>
     <div>
       <form @submit.prevent="addNewTodo">
+        
         <input type="text" v-model="newTodoText" placeholder="Enter your todo..." />
+        <input type="date" id="date" v-model="selectedDate">
         <button type="submit">Add Todo</button>
       </form>
       <TodoItems :todos="todos" @deleteTodo="deleteTodo" @changeStatusTodo="changeStatusTodo" />
@@ -19,16 +21,21 @@
     props: ["todos"],
     data() {
       return {
+        selectedDate: null,
         newTodoText: "",
       };
     },
     methods: {
       addNewTodo() {
         if (this.newTodoText.trim() !== "") {
+          const createdDate = new Date(Date.now());
+
           const newTodo = {
             id: Date.now(),
+            createdWhen: createdDate.toISOString().split('T')[0],
             text: this.newTodoText,
             completed: false,
+            deadline: this.selectedDate
           };
           this.$emit("addTodo", newTodo);
           this.newTodoText = "";
@@ -47,6 +54,9 @@
 <style>
 .todo-board {
   margin-bottom: 10px; /* Add margin bottom */
+}
+input {
+  margin-right: 10px;
 }
 </style>
   
